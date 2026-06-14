@@ -5,11 +5,11 @@
 </p>
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/safecall-dev/safecall-go-sdk.svg)](https://pkg.go.dev/github.com/safecall-dev/safecall-go-sdk)
+[![Go Reference](https://pkg.go.dev/badge/github.com/technosiveuk-ui/safecall-mcp-server.svg)](https://pkg.go.dev/github.com/technosiveuk-ui/safecall-mcp-server)
 
 **A Secure-by-Default AI Agent Tool execution server.**
 
-The **SafeCall MCP Server** is a production-ready implementation of the Model Context Protocol (MCP) that embeds the [SafeCall Go SDK](https://github.com/safecall-dev/safecall-go-sdk). It ensures that your AI agents cannot execute arbitrary tools without explicit permission, providing strong security guardrails out of the box.
+The **SafeCall MCP Server** is a production-ready implementation of the Model Context Protocol (MCP) that embeds the [SafeCall Go SDK](https://github.com/technosiveuk-ui/safecall-mcp-server). It ensures that your AI agents cannot execute arbitrary tools without explicit permission, providing strong security guardrails out of the box.
 
 ## Features
 
