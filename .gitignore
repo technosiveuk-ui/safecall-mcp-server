@@ -21,3 +21,5 @@ go.work.sum
 .vscode/
 .idea/
 .DS_Store
+safecall-mcp-server
+server_bin
