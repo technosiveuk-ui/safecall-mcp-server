@@ -6,8 +6,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
-	"github.com/safecall-dev/safecall-go-sdk/internal/fileutil"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/internal/fileutil"
 	"gopkg.in/yaml.v3"
 )
 

@@ -37,6 +37,25 @@ To start the server using the standard input/output transport:
 
 *(Note: Once started, the server listens for JSON-RPC messages on `stdin` and writes to `stdout`. It will appear to hang as it waits for client messages. This is the expected behavior for an MCP `stdio` server.)*
 
+#### Flags
+
+| Flag | Default | Description |
+| --- | --- | --- |
+| `-policy <path>` | *(empty)* | Load allow/block/redact rules from a YAML file (must be `0600` on Unix). When omitted, the built-in demo policies are used. |
+| `-audit` | `true` | Emit JSON audit events to **stderr** (safe for the stdio transport — `stdout` is reserved for JSON-RPC). |
+| `-version` | — | Print the build version and exit. |
+
+```bash
+# Run with a policy file and audit on (the production-default posture)
+./server_bin -policy policies.yaml -audit=true
+
+./server_bin -version
+```
+
+> The tool inventory itself is code-defined (Go tool handlers are functions), but the **policy rules** (which tools are ALLOW/BLOCK/REDACT, and which fields to redact) are runtime-configurable via `-policy` — no rebuild required.
+
+The server shuts down cleanly on `SIGINT`/`SIGTERM` (`SIGINT` on Windows), draining the in-flight call before exiting.
+
 ## Running the Test Client
 
 We provide a test client to verify the security enforcement paths. Ensure you have built the `server_bin` first as shown above.
@@ -83,9 +102,13 @@ The server wraps standard Go functions using `sdk.FuncInvoker` and exposes them 
 
 ## Policy Configuration
 
-The server currently uses an in-memory `StaticProvider` to demonstrate the paths in `cmd/safecall-mcp-server/main.go`. 
+By default the server ships with a small in-memory `StaticProvider` (in `cmd/safecall-mcp-server/main.go`) to demonstrate the enforcement paths. For production, point it at a YAML policy file with the `-policy` flag — no rebuild required:
 
-For production use, you can configure the SafeCall SDK to load from a local YAML file:
+```bash
+./server_bin -policy policies.yaml
+```
+
+The file must be `0600` on Unix (enforced on load). Alternatively, embedders can configure the SafeCall SDK directly:
 
 ```go
 provider, err := policy.NewYamlProvider("policies.yaml")

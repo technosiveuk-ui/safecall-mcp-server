@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/safecall-dev/safecall-go-sdk/sdk"
+	"github.com/technosiveuk-ui/safecall-mcp-server/sdk"
 )
 
 // queryDatabase is a raw, unprotected function that simulates a DB query.

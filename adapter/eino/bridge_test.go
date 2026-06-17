@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 func TestIsInterruptError_Match(t *testing.T) {

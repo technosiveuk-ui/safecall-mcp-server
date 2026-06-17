@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/safecall-dev/safecall-go-sdk/audit"
-	"github.com/safecall-dev/safecall-go-sdk/core"
-	"github.com/safecall-dev/safecall-go-sdk/policy"
+	"github.com/technosiveuk-ui/safecall-mcp-server/audit"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/policy"
 )
 
 func TestBuilder_StrictDefaults_BlocksUnknown(t *testing.T) {

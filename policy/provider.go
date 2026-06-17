@@ -6,7 +6,7 @@ package policy
 import (
 	"context"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // Policy defines the enforcement rules for a specific tool.

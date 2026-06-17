@@ -15,7 +15,7 @@ import (
 	"errors"
 
 	"github.com/cloudwego/eino/compose"
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // TranslateInterrupt converts a domain InterruptError into an Eino

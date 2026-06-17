@@ -3,7 +3,7 @@ package inspection
 import (
 	"context"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // Registry chains multiple Inspectors and aggregates their findings.

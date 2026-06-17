@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 func TestStaticProvider_MatchesPolicy(t *testing.T) {
@@ -152,5 +152,36 @@ func TestYamlProvider_ValidFile(t *testing.T) {
 	}
 	if len(pol.RedactFields) != 1 || pol.RedactFields[0] != "ssn" {
 		t.Errorf("expected redact_fields [ssn], got %v", pol.RedactFields)
+	}
+}
+
+// TestEvaluator_ExplicitAllow_AttachesFindingsButDoesNotEscalate documents
+// the CURRENT, PRD-compliant behaviour around GAP-003: an explicitly-ALLOWed
+// tool that carries sensitive findings is ALLOWED through, with the findings
+// attached to the decision (so they appear in the audit trail) but NOT
+// auto-escalated to REDACT. The PRD does not require escalation on an explicit
+// ALLOW; it is tracked only as a future consistency consideration
+// (UAT_PLAN.md §5.5, GAP-003).
+//
+// If product later decides an explicit ALLOW + finding should escalate to
+// REDACT (for parity with the no-policy path in TestEvaluator_EscalatesToRedact),
+// flip the assertion below to ActionRedact and route the explicit-match branch
+// in policy/evaluator.go through decisionForFindings.
+func TestEvaluator_ExplicitAllow_AttachesFindingsButDoesNotEscalate(t *testing.T) {
+	provider := NewStaticProvider(map[string]*Policy{
+		"send_message": {Action: core.ActionAllow},
+	})
+	eval := NewEvaluator(provider)
+
+	findings := []core.Finding{{FieldName: "api_key", Category: "SECRET/API_KEY"}}
+	decision, err := eval.Evaluate(context.Background(), "send_message", findings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if decision.Action != core.ActionAllow {
+		t.Errorf("expected explicit ALLOW to hold (current behaviour), got %v", decision.Action)
+	}
+	if len(decision.Findings) == 0 {
+		t.Error("expected the sensitive finding to be attached to the decision for audit")
 	}
 }

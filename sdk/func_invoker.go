@@ -3,7 +3,7 @@ package sdk
 import (
 	"context"
 
-	"github.com/safecall-dev/safecall-go-sdk/gateway"
+	"github.com/technosiveuk-ui/safecall-mcp-server/gateway"
 )
 
 // FuncInvoker wraps a standard Go function with the security gateway.

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // Evaluator matches tool calls to policies and produces enforcement decisions.
@@ -83,9 +83,10 @@ func (e *Evaluator) Evaluate(ctx context.Context, toolName string, findings []co
 	}
 
 	return &core.Decision{
-		Action:   pol.Action,
-		Reason:   fmt.Sprintf("policy matched for tool %q", toolName),
-		Findings: findings,
+		Action:       pol.Action,
+		Reason:       fmt.Sprintf("policy matched for tool %q", toolName),
+		Findings:     findings,
+		RedactFields: pol.RedactFields,
 	}, nil
 }
 

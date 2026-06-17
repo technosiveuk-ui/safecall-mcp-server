@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // RegexInspector scans field values against a set of compiled regex patterns.
@@ -47,12 +47,7 @@ func (ri *RegexInspector) inspectMap(fields map[string]any, prefix string) []cor
 			str := fmt.Sprintf("%v", v)
 			for _, p := range ri.patterns {
 				if p.Regex.MatchString(str) {
-					findings = append(findings, core.Finding{
-						FieldName:     fieldPath,
-						Category:      p.Category,
-						OriginalValue: str,
-						RedactedValue: core.RedactedPlaceholder,
-					})
+					findings = append(findings, core.NewFinding(fieldPath, p.Category, str))
 					break // one finding per field is enough
 				}
 			}

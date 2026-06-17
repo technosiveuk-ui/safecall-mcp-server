@@ -7,7 +7,7 @@ package inspection
 import (
 	"context"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // Inspector scans a set of key-value fields and returns any sensitive-data

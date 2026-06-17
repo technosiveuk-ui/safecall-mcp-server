@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // AuditEvent records a single enforcement decision.
@@ -17,6 +17,11 @@ type AuditEvent struct {
 
 	// ToolName identifies the tool that was called.
 	ToolName string `json:"tool_name"`
+
+	// RequestID is a process-unique identifier for the single Process call this
+	// event records. Use it to correlate audit events (e.g. an INTERRUPT and its
+	// later resume, or repeated findings) and to join with application logs.
+	RequestID string `json:"request_id,omitempty"`
 
 	// Action is the enforcement action taken (ALLOW, BLOCK, REDACT, INTERRUPT).
 	Action core.Action `json:"action"`

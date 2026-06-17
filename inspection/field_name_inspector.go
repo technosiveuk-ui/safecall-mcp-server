@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
 // sensitiveFieldNames is the default set of field names that are inherently
@@ -51,12 +51,7 @@ func (fni *FieldNameInspector) inspectMap(fields map[string]any, prefix string) 
 
 		lowered := strings.ToLower(key)
 		if category, ok := fni.keywords[lowered]; ok {
-			findings = append(findings, core.Finding{
-				FieldName:     fieldPath,
-				Category:      category,
-				OriginalValue: fmt.Sprintf("%v", val),
-				RedactedValue: core.RedactedPlaceholder,
-			})
+			findings = append(findings, core.NewFinding(fieldPath, category, fmt.Sprintf("%v", val)))
 		}
 
 		// Recurse into nested maps.

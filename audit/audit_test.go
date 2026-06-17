@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/safecall-dev/safecall-go-sdk/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
 )
 
-func TestStdoutEmitter_EmitsJSON(t *testing.T) {
+func TestWriterEmitter_EmitsJSON(t *testing.T) {
 	var buf bytes.Buffer
 	emitter := NewWriterEmitter(&buf)
 
@@ -35,6 +35,18 @@ func TestStdoutEmitter_EmitsJSON(t *testing.T) {
 	}
 	if decoded.Action != core.ActionBlock {
 		t.Errorf("expected action BLOCK, got %v", decoded.Action)
+	}
+}
+
+// TestNewStderrAndStdoutEmitters_NonNil guards against nil-deref regressions
+// for the stream-binding constructors (the JSON encoding logic itself is
+// covered by TestWriterEmitter_EmitsJSON).
+func TestNewStderrAndStdoutEmitters_NonNil(t *testing.T) {
+	if e := NewStderrEmitter(); e == nil {
+		t.Error("NewStderrEmitter returned nil")
+	}
+	if e := NewStdoutEmitter(); e == nil {
+		t.Error("NewStdoutEmitter returned nil")
 	}
 }
 

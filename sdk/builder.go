@@ -14,11 +14,11 @@
 package sdk
 
 import (
-	"github.com/safecall-dev/safecall-go-sdk/audit"
-	"github.com/safecall-dev/safecall-go-sdk/core"
-	"github.com/safecall-dev/safecall-go-sdk/gateway"
-	"github.com/safecall-dev/safecall-go-sdk/inspection"
-	"github.com/safecall-dev/safecall-go-sdk/policy"
+	"github.com/technosiveuk-ui/safecall-mcp-server/audit"
+	"github.com/technosiveuk-ui/safecall-mcp-server/core"
+	"github.com/technosiveuk-ui/safecall-mcp-server/gateway"
+	"github.com/technosiveuk-ui/safecall-mcp-server/inspection"
+	"github.com/technosiveuk-ui/safecall-mcp-server/policy"
 )
 
 // Re-export core types for convenience so users only need to import "sdk".
@@ -31,12 +31,13 @@ const (
 
 // Builder configures and constructs a Gateway.
 type Builder struct {
-	strictDefaults bool
-	defaultAction  core.Action
-	policyProvider policy.Provider
-	inspectors     []inspection.Inspector
-	emitter        audit.Emitter
-	useBuiltinDLP  bool
+	strictDefaults   bool
+	defaultAction    core.Action
+	policyProvider   policy.Provider
+	inspectors       []inspection.Inspector
+	emitter          audit.Emitter
+	useBuiltinDLP    bool
+	inspectResponses bool
 }
 
 // New returns a new Builder with safe defaults.
@@ -67,7 +68,28 @@ func (b *Builder) BuiltinDLP() *Builder {
 	return b
 }
 
+// InspectResponses enables outbound response DLP inspection (GAP-002 / FR3).
+// See gateway.Gateway.WithResponseInspection. Opt-in; off by default to keep
+// the ALLOW/REDACT hot path under the NFR2 latency budget.
+func (b *Builder) InspectResponses() *Builder {
+	b.inspectResponses = true
+	return b
+}
+
+// StderrAudit sets the audit emitter to write JSON events to stderr. This is
+// the correct choice for a stdio MCP server, where stdout is reserved for the
+// JSON-RPC protocol and must stay clean.
+func (b *Builder) StderrAudit() *Builder {
+	b.emitter = audit.NewStderrEmitter()
+	return b
+}
+
 // StdoutAudit sets the audit emitter to write JSON events to stdout.
+//
+// WARNING: do NOT use on a stdio MCP server — stdout carries the JSON-RPC
+// protocol and audit lines will corrupt/desync the client stream. Use
+// StderrAudit on stdio servers. StdoutAudit is intended only for non-stdio
+// deployments (HTTP/SSE MCP server, standalone CLI).
 func (b *Builder) StdoutAudit() *Builder {
 	b.emitter = audit.NewStdoutEmitter()
 	return b
@@ -120,5 +142,9 @@ func (b *Builder) Build() *gateway.Gateway {
 		emitter = audit.NopEmitter{}
 	}
 
-	return gateway.New(eval, reg, emitter)
+	gw := gateway.New(eval, reg, emitter)
+	if b.inspectResponses {
+		gw = gw.WithResponseInspection()
+	}
+	return gw
 }
